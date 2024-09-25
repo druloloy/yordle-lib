@@ -1,0 +1,5 @@
+registry=https://registry.yarnpkg.com/ # for yarn
+
+@druloloy:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=<auth_token>
+always-auth=true
