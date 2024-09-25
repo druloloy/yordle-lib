@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/druloloy/yordle-lib/issues"
   },
-  "homepage": "https://github.com/druloloy/yordle-lib.git#readme"
+  "homepage": "https://github.com/druloloy/yordle-lib.git#readme",
+  "keywords": [
+    "wordle", "word game library", "wordle library"
+  ]
 }
