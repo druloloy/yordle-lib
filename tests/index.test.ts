@@ -1,4 +1,4 @@
-import { WordBank, Yordle } from '../src/index'
+import { WordBank, Yordle } from '../index'
 
 describe('Core Test', () => {
     test('Empty string should throw an error', () => {
