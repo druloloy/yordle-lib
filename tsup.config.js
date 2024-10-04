@@ -7,4 +7,12 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
+  minify: 'terser',
+  terserOptions: {
+    compress: {
+      passes: 10
+    }
+  },
+  minifySyntax: true,
+  minifyIdentifiers: true
 });

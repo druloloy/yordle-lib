@@ -18,7 +18,7 @@ export default [
   {
     ignores: [
       "tests/**/*.jest.{js,ts}",
-      "build",
+      "dist",
       "*.config.{js,ts,mjs,cjs}"
     ],
   }

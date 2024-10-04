@@ -21,7 +21,9 @@ Yordle is a TypeScript library for creating and playing a word-guessing game sim
 To install the Yordle Library, use npm:
 
 ```bash
-yarn add yordle-lib@https://github.com/druloloy/yordle-lib.git
+npm i yordle
+// or
+yarn add yordle
 ```
 
 ## Usage
