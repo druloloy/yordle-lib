@@ -1,3 +1,4 @@
+import { IWordBankStatic, StaticImplements } from '../types'
 import source from './words.json'
 
 class WordBank implements StaticImplements<IWordBankStatic, typeof WordBank> {

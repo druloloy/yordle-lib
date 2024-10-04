@@ -1,4 +1,5 @@
 import WordBank from "../bank";
+import { IYordle, LetterCountType, ResultType } from "../types";
 
 /**
  * A class that represents a Yordle, a game of guessing a 5-letter word.
