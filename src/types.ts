@@ -1,28 +1,28 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-export declare type MatchType = 
+export type MatchType = 
   | 'exact' 
   | 'exists' 
   | 'wrong';
 
-export declare type ResultType = Array<{
+export type ResultType = Array<{
   [letter: string]: MatchType
 }>
 
-export declare type LetterCountType = {
+export type LetterCountType = {
   [letter: string]: number
 } | object
 
-export declare interface IYordle {
+export interface IYordle {
   guess: (input: string) => ResultType;
 }
 
 type IWordBank = object
 
-export declare interface IWordBankStatic {
+export interface IWordBankStatic {
     new (...args: unknown[]): IWordBank;
     draw: () => string;
     verify: (word: string) => boolean;
 }
 
-export declare type StaticImplements<I extends new (...args: unknown[]) => unknown, _C extends I> = InstanceType<I>;
+export type StaticImplements<I extends new (...args: unknown[]) => unknown, _C extends I> = InstanceType<I>;
