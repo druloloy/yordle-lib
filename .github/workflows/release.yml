@@ -15,7 +15,7 @@ jobs:
       - run: yarn build
       - run: |
           if [[ ${{ github.event.release.prerelease }} == false ]]; then
-            yarn publish
+            yarn publish && rm -rf dist/bank/ dist/core/
           else
             echo "This is a prerelease. Skipping publication."
           fi
