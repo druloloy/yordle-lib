@@ -25,6 +25,66 @@ class Yordle implements IYordle {
     }
 
     /**
+     * Load a list of entries into the current game, and remove all unavailable letters from the set of available letters.
+     * @param {ResultType[]} entries - The list of entries to load.
+     */
+    loadEntries(entries: ResultType[]) {
+      this.entries = entries;
+
+      // Remove unavailable letters from the set of available letters
+      for (const entry of entries) {
+        for (const item of entry) {
+          const [key, value] = Object.entries(item)[0];
+          if (value === 'wrong') {
+            this.removeAvailableLetter(key);
+          }
+        }
+      }
+    }
+
+    /**
+     * Make a guess with the given 5-letter word.
+     * @param {string} inputWord - The 5-letter word to be guessed.
+     * @returns {ResultType} An array of objects, each representing the result of a letter match.
+     *   - "exact" if the letter is in the correct position,
+     *   - "exists" if the letter exists in the word but not in the correct position,
+     *   - "wrong" if the letter does not exist in the word.
+     * @throws {TypeError} If the word is empty, not 5 letters long, or not in the dictionary.
+     */
+    guess(inputWord: string): ResultType {
+      this.validateWord(inputWord);
+      const guessWord = inputWord.toLowerCase();
+      const result: ResultType = new Array(5);
+      const remainingLetters = { ...this.letterCount };
+
+      // First pass: Mark exact matches
+      for (let i = 0; i < 5; i++) {
+          const guessLetter = guessWord[i];
+          if (guessLetter === this.word[i]) {
+              result[i] = { [guessLetter]: "exact" };
+              remainingLetters[guessLetter]--;
+          }
+      }
+
+      // Second pass: Mark exists or wrong
+      for (let i = 0; i < 5; i++) {
+          if (result[i]) continue; // Skip already marked positions
+
+          const guessLetter = guessWord[i];
+          if (remainingLetters[guessLetter] > 0) {
+              result[i] = { [guessLetter]: "exists" };
+              remainingLetters[guessLetter]--;
+          } else {
+              result[i] = { [guessLetter]: "wrong" };
+              this.removeAvailableLetter(guessLetter);
+          }
+      }
+
+      this.entries.push(result);
+      return result;
+    }
+
+    /**
      * Validates the given word against the following conditions:
      *  - The word is not empty.
      *  - The word is 5 letters long.
@@ -38,49 +98,7 @@ class Yordle implements IYordle {
             throw new TypeError("Invalid word. Must be a 5-letter word from the dictionary.");
         }
     }
-
-    /**
-     * Make a guess with the given 5-letter word.
-     * @param {string} inputWord - The 5-letter word to be guessed.
-     * @returns {ResultType} An array of objects, each representing the result of a letter match.
-     *   - "exact" if the letter is in the correct position,
-     *   - "exists" if the letter exists in the word but not in the correct position,
-     *   - "wrong" if the letter does not exist in the word.
-     * @throws {TypeError} If the word is empty, not 5 letters long, or not in the dictionary.
-     */
-    guess(inputWord: string): ResultType {
-        this.validateWord(inputWord);
-        const guessWord = inputWord.toLowerCase();
-        const result: ResultType = new Array(5);
-        const remainingLetters = { ...this.letterCount };
-
-        // First pass: Mark exact matches
-        for (let i = 0; i < 5; i++) {
-            const guessLetter = guessWord[i];
-            if (guessLetter === this.word[i]) {
-                result[i] = { [guessLetter]: "exact" };
-                remainingLetters[guessLetter]--;
-            }
-        }
-
-        // Second pass: Mark exists or wrong
-        for (let i = 0; i < 5; i++) {
-            if (result[i]) continue; // Skip already marked positions
-
-            const guessLetter = guessWord[i];
-            if (remainingLetters[guessLetter] > 0) {
-                result[i] = { [guessLetter]: "exists" };
-                remainingLetters[guessLetter]--;
-            } else {
-                result[i] = { [guessLetter]: "wrong" };
-                this.removeAvailableLetter(guessLetter);
-            }
-        }
-
-        this.entries.push(result);
-        return result;
-    }
-
+    
     /**
      * Count the occurrences of each letter in the given word.
      * @param {string} word - The word to count letters for.
@@ -104,22 +122,6 @@ class Yordle implements IYordle {
             this.availableLetters.delete(letter);
             this.unavailableLetters.add(letter);
         }
-    }
-
-    public loadEntries(entries: ResultType[]) {
-        this.entries = entries;
-
-        // Remove unavailable letters from the set of available letters
-        for (const entry of entries) {
-          for (const item of entry) {
-            const [key, value] = Object.entries(item)[0];
-            if (value === 'wrong') {
-              this.removeAvailableLetter(key);
-            }
-          }
-        }
-
-        console.log(this.unavailableLetters);
     }
 }
 

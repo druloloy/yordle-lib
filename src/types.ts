@@ -14,7 +14,11 @@ export type LetterCountType = {
 } | object
 
 export interface IYordle {
+  entries: ResultType[];
+  availableLetters: Set<string>;
+  unavailableLetters: Set<string>;
   guess: (input: string) => ResultType;
+  loadEntries: (entries: ResultType[]) => void;
 }
 
 type IWordBank = object
