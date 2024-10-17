@@ -65,8 +65,8 @@ Main function to initialize the game controller.
 
 ```typescript
 type YordleProps = {
-  word?: string;           // Optional: Put a custom word or generate using draw(true) function
-  wordSize?: number;       // Length of the word
+  word?: string;          // Optional: Put a custom word or generate using draw(true) function
+  wordSize?: number;      // Optional: Length of the word (Defaults to 5)
   wordList?: string[];    // Optional custom word list (Defaults to a 5-letter word list)
   entries?: ResultType[]; // Optional previous game entries
 }
