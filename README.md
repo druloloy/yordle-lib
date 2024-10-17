@@ -23,8 +23,6 @@ A TypeScript library for creating Wordle-like word guessing games. Yordle provid
 npm install yordle
 # or
 yarn add yordle
-# or
-pnpm add yordle
 ```
 
 ## Quick Start
@@ -36,10 +34,14 @@ import yordle from 'yordle';
 const game = yordle({
   word: 'hello',    // Target word
   wordSize: 5,      // Word length
-  // Optional parameters
   wordList: ['hello', 'world'], // Custom word list
   entries: []       // Previous game entries
 });
+
+// or
+
+const game = yordle(); // Use the default values
+const word = game.draw(true); // Generate a random word to guess
 
 // Make a guess
 const result = game.guess('world');
@@ -63,8 +65,8 @@ Main function to initialize the game controller.
 
 ```typescript
 type YordleProps = {
-  word: string;           // Target word to be guessed
-  wordSize: number;       // Length of the word
+  word?: string;           // Optional: Put a custom word or generate using draw(true) function
+  wordSize?: number;       // Length of the word
   wordList?: string[];    // Optional custom word list (Defaults to a 5-letter word list)
   entries?: ResultType[]; // Optional previous game entries
 }
@@ -144,10 +146,8 @@ type LetterCountType = {
 import yordle from 'yordle';
 
 // Initialize game
-const game = yordle({
-  word: 'clear',
-  wordSize: 5
-});
+const game = yordle();
+const word = game.draw(true);
 
 // Process player guess
 function handleGuess(playerInput: string) {
@@ -175,15 +175,16 @@ function handleGuess(playerInput: string) {
 
 ```typescript
 const customGame = yordle({
-  word: 'code',
   wordSize: 4,
   wordList: ['code', 'java', 'rust', 'ruby', 'perl'],
 });
+const word = customGame.draw(true);
+
 ```
 
 ## License
 
-MIT © [Your Name]
+MIT © Andrew Loloy
 
 ## Contributing
 
