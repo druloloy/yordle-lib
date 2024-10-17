@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 export type MatchType = 
   | 'exact' 
   | 'exists' 
@@ -13,20 +11,32 @@ export type LetterCountType = {
   [letter: string]: number
 } | object
 
-export interface IYordle {
-  entries: ResultType[];
+export type YordleProps = {
+  word: string;
+  wordSize: number;
+  wordList?: string[];
+  entries?: ResultType[];
+}
+
+export type GuessWordParams = {
+  word: string;
+  input: string;
+  wordList: string[];
+  wordSize: number;
+  letterCount: LetterCountType;
   availableLetters: Set<string>;
   unavailableLetters: Set<string>;
-  guess: (input: string) => ResultType;
-  loadEntries: (entries: ResultType[]) => void;
+  entries?: ResultType[];
 }
 
-type IWordBank = object
-
-export interface IWordBankStatic {
-    new (...args: unknown[]): IWordBank;
-    draw: () => string;
-    verify: (word: string) => boolean;
+export type GuessResult = {
+  result: ResultType;
+  availableLetters: Set<string>;
+  unavailableLetters: Set<string>;
+  entries: ResultType[];
 }
 
-export type StaticImplements<I extends new (...args: unknown[]) => unknown, _C extends I> = InstanceType<I>;
+export type LetterSetResult = {
+  availableLetters: Set<string>;
+  unavailableLetters: Set<string>;
+}
