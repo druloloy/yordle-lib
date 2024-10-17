@@ -37,15 +37,11 @@ describe('Core Test', () => {
 
             if (i === 5){
                 const real_answer = y.guess(word);
-                const result = real_answer.map(obj => { 
-                    const letter = Object.keys(obj)[0];
-                    return {
-                        [letter]: 'exact'
-                    }} 
+                const result = real_answer.every(letterResult => 
+                    Object.values(letterResult)[0] === 'exact'
                 )
-                expect(real_answer).toEqual(result)
+                expect(result).toBe(true);
             }
-            console.log(y.entries)
         }
     })
 })
