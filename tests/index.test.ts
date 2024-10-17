@@ -21,11 +21,8 @@ describe('Core Test', () => {
     })
 
     test('Correct or wrong guesses should return a ResultType object', () => {
-        const word = 'greed'
-        const y = yordle({
-            word,
-            wordSize: 5
-        });
+        const y = yordle()
+        const word = y.draw(true);
         
         for (let i = 0; i < 6; i++) {
             const answer = y.guess(y.draw());
@@ -37,15 +34,37 @@ describe('Core Test', () => {
 
             if (i === 5){
                 const real_answer = y.guess(word);
-                const result = real_answer.map(obj => { 
-                    const letter = Object.keys(obj)[0];
-                    return {
-                        [letter]: 'exact'
-                    }} 
+                const result = real_answer.every(letterResult => 
+                    Object.values(letterResult)[0] === 'exact'
                 )
-                expect(real_answer).toEqual(result)
+                expect(result).toBe(true);
             }
-            console.log(y.entries)
+        }
+    })
+
+    test('4-Lettered Words should return a ResultType object', () => {
+        const y = yordle({
+            wordSize: 4,
+            wordList: ['code', 'java', 'rust', 'ruby', 'perl']
+        });
+
+        const word = y.draw(true);
+        
+        for (let i = 0; i < 6; i++) {
+            const answer = y.guess(y.draw());
+            
+            expect(answer).toBeInstanceOf(Array);
+            answer.forEach((item: object) => {
+                expect(typeof item).toBe('object');
+            });
+
+            if (i === 5){
+                const real_answer = y.guess(word);
+                const result = real_answer.every(letterResult => 
+                    Object.values(letterResult)[0] === 'exact'
+                )
+                expect(result).toBe(true);
+            }
         }
     })
 })
