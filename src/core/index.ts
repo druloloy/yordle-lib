@@ -8,12 +8,12 @@ import defaultWordList from "../words.json";
  * @returns Object containing game control functions
  */
 export default function yordle({ 
-    word, 
-    wordSize, 
+    word = '', 
+    wordSize = 5, 
     wordList = defaultWordList, 
     entries = [] 
-}: YordleProps) {
-    let currentWord = word;
+}: YordleProps = {}) {
+    let currentWord = word || drawWord(wordList);
     let availableLetters = new Set('abcdefghijklmnopqrstuvwxyz');
     let unavailableLetters = new Set<string>();
     let letterCount = countLetters(currentWord);
@@ -64,6 +64,7 @@ export default function yordle({
         guess,
         draw,
         verify: (input: string) => verifyWord(input, wordList),
-        entries
+        entries,
+        currentWord
     };
 }

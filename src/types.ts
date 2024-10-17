@@ -12,8 +12,8 @@ export type LetterCountType = {
 } | object
 
 export type YordleProps = {
-  word: string;
-  wordSize: number;
+  wordSize?: number;
+  word?: string;
   wordList?: string[];
   entries?: ResultType[];
 }
