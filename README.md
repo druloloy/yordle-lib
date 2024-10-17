@@ -1,59 +1,47 @@
-# Yordle Library
+# Yordle
 
-Yordle is a TypeScript library for creating and playing a word-guessing game similar to Wordle. It provides functionality for managing the game state, validating guesses, and interacting with a word bank.
+[![npm version](https://img.shields.io/npm/v/yordle.svg)](https://www.npmjs.com/package/yordle)
+[![npm downloads](https://img.shields.io/npm/dm/yordle.svg)](https://www.npmjs.com/package/yordle)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Table of Contents
+A TypeScript library for creating Wordle-like word guessing games. Yordle provides a flexible and type-safe way to implement word guessing mechanics in your projects.
 
-- [Installation](#installation)
-- [Usage](#usage)
-  - [Creating a Yordle Game](#creating-a-yordle-game)
-  - [Making a Guess](#making-a-guess)
-  - [Using the Word Bank](#using-the-word-bank)
-- [API Reference](#api-reference)
-  - [Yordle Class](#yordle-class)
-  - [WordBank Class](#wordbank-class)
-- [Types](#types)
-- [Contributing](#contributing)
-- [License](#license)
+## Features
+
+- 🎯 Full TypeScript support with comprehensive type definitions
+- 🎲 Built-in word list with option to use custom words
+- 🔄 Random word generation
+- ✅ Word verification
+- 📊 Detailed guess feedback system
+- 🎮 Game state management
+- 💾 Progress tracking
 
 ## Installation
 
-To install the Yordle Library, use npm:
-
 ```bash
-npm i yordle
-// or
+npm install yordle
+# or
 yarn add yordle
+# or
+pnpm add yordle
 ```
 
-## Usage
-
-First, import the `Yordle` and `WordBank` classes:
+## Quick Start
 
 ```typescript
-import { Yordle, WordBank } from 'yordle-lib';
-```
+import yordle from 'yordle';
 
-### Creating a Yordle Game
+// Initialize the game
+const game = yordle({
+  word: 'hello',    // Target word
+  wordSize: 5,      // Word length
+  // Optional parameters
+  wordList: ['hello', 'world'], // Custom word list
+  entries: []       // Previous game entries
+});
 
-To start a new game, create a new `Yordle` instance with a 5-letter word:
-
-```typescript
-const game = new Yordle('hello');
-```
-
-Or use the `WordBank` to get a random word:
-
-```typescript
-const randomWord = WordBank.draw();
-const game = new Yordle(randomWord);
-```
-
-### Making a Guess
-
-To make a guess in the game:
-
-```typescript
+// Make a guess
 const result = game.guess('world');
 console.log(result);
 // Output: [
@@ -65,69 +53,144 @@ console.log(result);
 // ]
 ```
 
-### Using the Word Bank
-
-To check if a word exists in the word bank:
-
-```typescript
-const exists = WordBank.verify('hello');
-console.log(exists); // true or false
-```
-
-To get a random word from the word bank:
-
-```typescript
-const randomWord = WordBank.draw();
-console.log(randomWord); // A random 5-letter word
-```
-
 ## API Reference
 
-### Yordle Class
+### `yordle(props: YordleProps)`
 
-#### Constructor
+Main function to initialize the game controller.
+
+#### Props
 
 ```typescript
-constructor(input: string)
+type YordleProps = {
+  word: string;           // Target word to be guessed
+  wordSize: number;       // Length of the word
+  wordList?: string[];    // Optional custom word list (Defaults to a 5-letter word list)
+  entries?: ResultType[]; // Optional previous game entries
+}
 ```
 
-Creates a new Yordle game instance with the given word.
+#### Returns
 
-- `input`: A 5-letter word to be guessed.
+Object containing the following methods:
 
-Throws a `TypeError` if:
-- The word is empty
-- The word is not 5 letters long
-- The word doesn't exist in the dictionary (WordBank)
+##### `guess(input: string): ResultType`
 
-#### Methods
+Makes a guess with the provided input word and returns the result.
 
-##### `guess(inputWord: string): ResultType`
+- **Parameters:**
+  - `input`: The word guessed by the player
+- **Returns:** Array of objects containing letter matches:
+  - `'exact'`: Letter is in correct position
+  - `'exists'`: Letter exists in word but wrong position
+  - `'wrong'`: Letter does not exist in word
 
-Makes a guess and returns the result.
+```typescript
+const result = game.guess('spark');
+// Example output:
+// [
+//   { s: 'wrong' },
+//   { p: 'exists' },
+//   { a: 'wrong' },
+//   { r: 'exact' },
+//   { k: 'wrong' }
+// ]
+```
 
-- `inputWord`: A 5-letter word guess.
-- Returns: An array of objects representing the result of each letter.
+##### `draw(overwrite?: boolean): string`
 
-### WordBank Class
+Returns a random word from the word list.
 
-#### Static Methods
+- **Parameters:**
+  - `overwrite`: If true, replaces the current target word (default: false)
+- **Returns:** A random word from the word list
 
-##### `draw(): string`
+```typescript
+const newWord = game.draw();        // Get random word
+const newTarget = game.draw(true);  // Get and set new target word
+```
 
-Returns a random 5-letter word from the word bank.
+##### `verify(input: string): boolean`
 
-##### `verify(word: string): boolean`
+Verifies if a word exists in the word list.
 
-Checks if a word exists in the word bank.
+- **Parameters:**
+  - `input`: Word to verify
+- **Returns:** Boolean indicating if the word is valid
 
-- `word`: A 5-letter word to verify.
-- Returns: `true` if the word exists in the word bank, `false` otherwise.
+```typescript
+const isValid = game.verify('hello'); // true
+```
+
+## Types
+
+```typescript
+type MatchType = 'exact' | 'exists' | 'wrong';
+
+type ResultType = Array<{
+  [letter: string]: MatchType
+}>;
+
+type LetterCountType = {
+  [letter: string]: number
+} | object;
+```
+
+## Example Usage
+
+### Basic Game Implementation
+
+```typescript
+import yordle from 'yordle';
+
+// Initialize game
+const game = yordle({
+  word: 'clear',
+  wordSize: 5
+});
+
+// Process player guess
+function handleGuess(playerInput: string) {
+  if (!game.verify(playerInput)) {
+    console.log('Invalid word!');
+    return;
+  }
+
+  const result = game.guess(playerInput);
+  
+  // Check for win condition
+  const isWin = result.every(letterResult => 
+    Object.values(letterResult)[0] === 'exact'
+  );
+
+  if (isWin) {
+    console.log('Congratulations!');
+  }
+
+  return result;
+}
+```
+
+### Custom Word List
+
+```typescript
+const customGame = yordle({
+  word: 'code',
+  wordSize: 4,
+  wordList: ['code', 'java', 'rust', 'ruby', 'perl'],
+});
+```
+
+## License
+
+MIT © [Your Name]
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
